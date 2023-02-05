@@ -1,0 +1,10 @@
+body{
+    background: url('../img/bg2.jpg');
+}
+.resultContainer {
+    height: 60vh;
+    overflow-y: scroll;
+}
+.resultContainer::-webkit-scrollbar{
+    display: none;
+}

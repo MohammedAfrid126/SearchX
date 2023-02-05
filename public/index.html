@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SearchX | Dictionary Library | Search Any Word</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        body{
+            background: url('img/bg1.png');
+        }
+        .resultContainerPara {
+            height: 45vh;
+            overflow-y: scroll;
+            background-color: #97d1b5;
+            border: 2px solid white;
+        }
+        .resultContainerPara::-webkit-scrollbar{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg" style="background-color: #97d1b5;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">SearchX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <h1 class="text-center">Search for a word in Dictionary</h1>
+        <form action="" class="w-100 mb-2">
+            <div class="form-group w-75 m-auto">
+                <input class="text-center w-100" type="text" id="word" placeholder="Enter the word">
+            </div>
+            <div class="text-center">
+                <button class="btn btn-success m-auto w-25 mt-2" id="submit" type="submit">Get Definition</button>
+            </div>
+        </form>
+
+        <div class="resultContainer">
+            <h1 class="text-center">Results:</h1>
+            <p id="result" class="resultContainerPara p-5"></p>
+            <div class="text-center">
+                <button class="btn btn-success m-auto w-25 mt-2" id="clear" type="clear">Clear</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script>
+        clear.addEventListener("click", ()=>{
+            result.innerHTML = ""
+        });
+
+        submit.addEventListener('click', (e) => {
+            e.preventDefault();
+            let url = `http://localhost:3000/searchword?word=${word.value}`;
+            console.log(url);
+            let data = fetch(url)
+            data.then((response) => {
+                return response.json();
+            }).then((resp) => {
+                let htmli = `You searched for word : <b>${resp[0].word}</b><br>
+                Here are the Meaning <ul>`
+                for (let i = 0; i < resp[0].meanings.length; i++) {
+                    htmli += `<li>Definition ${i + 1} : ${resp[0].meanings[i].definitions[0].definition}</li>`
+                }
+                htmli += `</ul>`;
+                result.innerHTML = result.innerHTML + htmli;
+                return resp;
+            }).catch((rej) => {
+                let htmli = `The Word You Searched for: is ${rej[0]} Bcs of Typing Or Spelling Mistake <br>Sorry We Could Not Find a Proper Meaning <br> Please Try Again & Check The Spelling`;
+                result.innerHTML = result.innerHTML + htmli;
+                return rej;
+            })
+        });
+    </script>
+</body>
+
+</html>
